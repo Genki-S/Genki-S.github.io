@@ -1,6 +1,6 @@
 {
   "name": "genkisugimoto-dot-com",
-  "root": "./build",
+  "root": "./public",
   "clean_urls": true,
   "error_page": "error.html"
 }
