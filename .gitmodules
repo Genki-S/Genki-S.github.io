@@ -1,3 +1,9 @@
 [submodule "portfolio"]
 	path = portfolio
 	url = git@github.com:Genki-S/portfolio.git
+[submodule "jpblog"]
+	path = jpblog
+	url = git@github.com:Genki-S/jpblog.git
+[submodule "blog"]
+	path = blog
+	url = git@github.com:Genki-S/blog.git
