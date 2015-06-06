@@ -1,0 +1,28 @@
+#!/bin/bash
+
+set -x
+
+root="$(dirname $(readlink -f $0))/.."
+
+cd ./portfolio
+npm install
+bower install
+gulp browserify
+gulp sass
+cd $root
+cp ./portfolio/index.html ./public/index.html
+cp -R ./portfolio/build ./public/build
+cp -R ./portfolio/bower_components ./public/bower_components
+
+cd $root
+mkdir -p ./public/jp
+cp ./jp/index.html ./public/jp/index.html
+
+for d in blog jpblog; do
+  cd $root
+  cd $d
+  bundle install
+  bundle exec jekyll build
+  mkdir -p ../public/$d
+  cp -R _site/* ../public/$d
+done
