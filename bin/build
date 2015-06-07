@@ -26,3 +26,9 @@ for d in blog jpblog; do
   mkdir -p ../public/$d
   cp -R _site/* ../public/$d
 done
+
+cd $root
+cd programming-contest-blog/blog
+jekyll build
+mkdir -p ../../public/procon
+cp -R _site/* ../../public/procon
