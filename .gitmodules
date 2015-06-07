@@ -7,3 +7,6 @@
 [submodule "blog"]
 	path = blog
 	url = git@github.com:Genki-S/blog.git
+[submodule "programming-contest-blog"]
+	path = programming-contest-blog
+	url = git@github.com:Genki-S/programming-contest-blog.git
