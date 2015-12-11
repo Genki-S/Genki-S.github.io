@@ -1,0 +1,9 @@
+{
+  "firebase": "genkisugimoto",
+  "public": "./public",
+  "ignore": [
+    "firebase.json",
+    "**/.*",
+    "**/node_modules/**"
+  ]
+}
