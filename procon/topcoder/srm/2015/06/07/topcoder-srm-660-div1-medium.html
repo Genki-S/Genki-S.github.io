@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>TopCoder SRM 660 Div1 Medium: Privateparty</title>
+  <meta name="description" content="Problem Statement">
+
+  <link rel="stylesheet" href="/procon/css/main.css">
+  <link rel="canonical" href="http://genkisugimoto.com/procon/topcoder/srm/2015/06/07/topcoder-srm-660-div1-medium.html">
+  <link rel="alternate" type="application/rss+xml" title="Genki Sugimoto's programming contest blog" href="http://genkisugimoto.com/procon/feed.xml" />
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/procon/">Genki Sugimoto's programming contest blog</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+          <a class="page-link" href="/procon/about/">About</a>
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">TopCoder SRM 660 Div1 Medium: Privateparty</h1>
+    <p class="post-meta">Jun 7, 2015</p>
+  </header>
+
+  <article class="post-content">
+    <p><a href="http://community.topcoder.com/stat?c=problem_statement&amp;pm=13804">Problem Statement</a></p>
+
+<h1 id="algorithm">Algorithm</h1>
+
+<p>DP</p>
+
+<h1 id="explanation">Explanation</h1>
+
+<h2 id="key-no1-influence-chain">Key No.1: Influence Chain</h2>
+
+<p>Say we want to know whether or not Alice accepts invitation when she comes. What factors influence the attendance of Alice? When Alice likes everyone, she obviously accepts invitation regardless of other people’s attendances, so we do not consider this case here. When Alice hates Bob, if and only if Bob comes before Alice <strong>and</strong> Bob accepts the invitation, Alice declines the invitation. So, Alice’s attendance is influenced by (1) whether Bob comes before Alice and (2) (when Bob comes before Alice) whether Bob accepts the invitation or not. Here, what factors influence Bob’s attendance? When Bob hates Carol, under the same argument, Bob’s attendance is influenced by (1) whether Carol comes before Bob and (2) (when Carol comes before Bob) whether Carol accepts the invitation or not. Since Carol’s attendance influences Bob’s attendance and Bob’s attendance influences Alice’s attendance, Carol’s attendance effectively influences Alice’s attendance. So, if we create a chain starting from Alice by connecting the hatred relations, all people in the chain influence Alice’s attendance. We call it an influence chain.</p>
+
+<h2 id="key-no2-number-of-bobs-influencers-is-number-of-alices-influencers---1">Key No.2: Number of Bob’s influencers is number of Alice’s influencers - 1</h2>
+
+<p>Since one person can only hate one person, this is obvious.</p>
+
+<h2 id="summary-of-key-points">Summary of key points</h2>
+
+<ul>
+  <li>If we know Alice’s order, we can calculate the probability Bob comes before Alice</li>
+  <li>When Bob comes before Alice, if we know Bob’s probability to attend we can calculate the probability of Alice’s attendance (1 - probability that Bob attends)</li>
+</ul>
+
+<p>This means that if we know Bob’s probability to attend for each order Bob comes, we can calculate Alice’s probability to attend for each order Alice comes. And to do that we want to know Carol’s (whom Bob hates) probability to attend for each order Carol comes. And if Carol likes everyone, she comes 100%. DP chance!</p>
+
+<h2 id="implementation">Implementation</h2>
+
+<p>Let <code>dp[i][o]</code> the probability that the person who has i influencers comes as o-th person in i + 1 people (influencers and the person himself). When a person likes everyone (<code>i = 0</code>) he/she will come 100%, so <code>dp[0][1] = 1</code>, this is the base case.</p>
+
+<p>We can calculate <code>dp[i][o]</code> for <code>1 &lt;= i &lt;= n - 1</code>, <code>1 &lt;= o &lt;= i + 1</code> as follows (using Alice and Bob example above):</p>
+
+<script type="math/tex; mode=display">dp[i][o] = P(\text{Bob comes after Alice}) + \sum\limits_{k=1}^{o-1} P(\text{Bob comes as k-th person}) * (1 - dp[i-1][k])</script>
+
+<p>where P(x) is the probability that the condition x suffices.</p>
+
+<p>Here, <code>dp[i-1][k]</code> represents the probability that a person (here we are calling him Bob) having i-1 influencers attends the party when comes as k-th person. This <code>dp</code> calculation is done in O(n * n * n) = O(50^3).</p>
+
+<p>Having all <code>dp[i][o]</code> calculated, we can calculate the probability for a given person to accept the invitation. First we have to know how long the influence chain for this person is (when doing this, you don’t want to get into infinite loop – multiple instance of the same person does not influence the attendance of given person, so simply stop adding up the influence chain when you find a loop). Let the length of a given person <script type="math/tex">I</script>, then the probability this person accepts the invitation is:</p>
+
+<script type="math/tex; mode=display">\sum\limits_{o=1}^{I+1} dp[I][o]</script>
+
+<p>Note that the order of people who are not in the influence chain does not affect the person’s attendance, so we just have to think the order the person comes in people who are in the influence chain.</p>
+
+<h1 id="code">Code</h1>
+
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="cp">#include &lt;iostream&gt;</span>
+<span class="cp">#include &lt;string&gt;</span>
+<span class="cp">#include &lt;vector&gt;</span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<span class="k">static</span> <span class="k">const</span> <span class="kt">double</span> <span class="n">EPS</span> <span class="o">=</span> <span class="mf">1e-10</span><span class="p">;</span>
+<span class="cp">#define FOR(i, b, e) for (int i = (b); i &lt; (e); ++i)</span>
+<span class="cp">#define REP(i, n) FOR(i, 0, n)</span>
+
+<span class="k">class</span> <span class="nc">Privateparty</span> <span class="p">{</span>
+  <span class="k">public</span><span class="o">:</span>
+  <span class="kt">double</span> <span class="n">getexp</span><span class="p">(</span><span class="n">vector</span> <span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">a</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">a</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+    <span class="k">typedef</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">VD</span><span class="p">;</span>
+    <span class="c1">// dp[i][j] = probability of a man to come to the party when the man&#39;s</span>
+    <span class="c1">//            participation is influenced by i people, and when the man</span>
+    <span class="c1">//            has come as the j-th person among those i people (+ himself).</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="n">VD</span><span class="o">&gt;</span> <span class="n">dp</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">VD</span><span class="p">(</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">));</span>
+    <span class="c1">// if a person is not influenced by anyone, he will come.</span>
+    <span class="n">dp</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+
+    <span class="n">FOR</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">FOR</span> <span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// Let the line (people coming to the party) 1 indexed.</span>
+        <span class="c1">// Let&#39;s say Alice has come to the line as j-th person</span>
+        <span class="c1">// and Alice hates Bob</span>
+        <span class="c1">// there are i people and Alice</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">j</span> <span class="o">&gt;</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span> <span class="k">break</span><span class="p">;</span> <span class="p">}</span> <span class="c1">// line has only i+1 people (including Alice)</span>
+        <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">+=</span> <span class="p">(</span><span class="n">i</span> <span class="o">-</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="kt">double</span><span class="p">)</span><span class="n">i</span><span class="p">;</span> <span class="c1">// probability that Bob comes after Alice</span>
+        <span class="n">FOR</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+          <span class="c1">// When Bob came before Alice</span>
+          <span class="c1">// Add the probability that:</span>
+          <span class="c1">//   - Bob comes as k-th person and</span>
+          <span class="c1">//   - Bob declined the invitation</span>
+          <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">+=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="kt">double</span><span class="p">)</span><span class="n">i</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">k</span><span class="p">]);</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="kt">double</span> <span class="n">ans</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">REP</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kt">int</span> <span class="n">n_influencer</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="kt">int</span> <span class="n">parent</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+      <span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">visited</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="nb">false</span><span class="p">);</span>
+      <span class="n">visited</span><span class="p">[</span><span class="n">parent</span><span class="p">]</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+      <span class="k">while</span> <span class="p">(</span><span class="n">parent</span> <span class="o">!=</span> <span class="n">a</span><span class="p">[</span><span class="n">parent</span><span class="p">])</span> <span class="p">{</span>
+        <span class="n">parent</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="n">parent</span><span class="p">];</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">visited</span><span class="p">[</span><span class="n">parent</span><span class="p">])</span> <span class="p">{</span> <span class="c1">// loop</span>
+          <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="n">visited</span><span class="p">[</span><span class="n">parent</span><span class="p">]</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+        <span class="n">n_influencer</span><span class="o">++</span><span class="p">;</span>
+      <span class="p">}</span>
+
+      <span class="n">FOR</span> <span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">j</span> <span class="o">&gt;</span> <span class="n">n_influencer</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span> <span class="k">break</span><span class="p">;</span> <span class="p">}</span>
+        <span class="c1">// add probability that:</span>
+        <span class="c1">//   - Alice comes as j-th person (among n_influencer + 1 people) and</span>
+        <span class="c1">//   - the probability that Alice accepts when she comes as j-th person</span>
+        <span class="n">ans</span> <span class="o">+=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="kt">double</span><span class="p">)(</span><span class="n">n_influencer</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span> <span class="o">*</span> <span class="n">dp</span><span class="p">[</span><span class="n">n_influencer</span><span class="p">][</span><span class="n">j</span><span class="p">];</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">ans</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">};</span></code></pre></div>
+
+<p>Full runnable code with test cases <a href="https://github.com/Genki-S/programming-contest-blog/blob/master/code/topcoder/srm/660/div1/Privateparty.cpp">here</a>.</p>
+
+<h1 id="credit">Credit</h1>
+
+<ul>
+  <li><a href="http://kmjp.hatenablog.jp/entry/2015/06/04/1030">TopCoder SRM 660 Div1 Medium Privateparty - kmjp’s blog</a></li>
+</ul>
+
+  </article>
+
+</div>
+
+
+        
+          <div id="disqus_thread"></div>
+          <script type="text/javascript">
+            /* * * CONFIGURATION VARIABLES * * */
+            var disqus_shortname = 'genkisprogrammingcontestblog';
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+              var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+              dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+              (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+          </script>
+          <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+        
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Genki Sugimoto's programming contest blog</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col  footer-col-1">
+        <ul class="contact-list">
+          <li>Genki Sugimoto's programming contest blog</li>
+          <li><a href="mailto:genki.sugimoto.jp@gmail.com">genki.sugimoto.jp@gmail.com</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-2">
+        <ul class="social-media-list">
+          
+          <li>
+            <a href="https://github.com/Genki-S">
+              <span class="icon  icon--github">
+                <svg viewBox="0 0 16 16">
+                  <path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                </svg>
+              </span>
+
+              <span class="username">Genki-S</span>
+            </a>
+          </li>
+          
+
+          
+          <li>
+            <a href="https://twitter.com/GenkiSugimoto">
+              <span class="icon  icon--twitter">
+                <svg viewBox="0 0 16 16">
+                  <path fill="#828282" d="M15.969,3.058c-0.586,0.26-1.217,0.436-1.878,0.515c0.675-0.405,1.194-1.045,1.438-1.809
+                  c-0.632,0.375-1.332,0.647-2.076,0.793c-0.596-0.636-1.446-1.033-2.387-1.033c-1.806,0-3.27,1.464-3.27,3.27 c0,0.256,0.029,0.506,0.085,0.745C5.163,5.404,2.753,4.102,1.14,2.124C0.859,2.607,0.698,3.168,0.698,3.767 c0,1.134,0.577,2.135,1.455,2.722C1.616,6.472,1.112,6.325,0.671,6.08c0,0.014,0,0.027,0,0.041c0,1.584,1.127,2.906,2.623,3.206 C3.02,9.402,2.731,9.442,2.433,9.442c-0.211,0-0.416-0.021-0.615-0.059c0.416,1.299,1.624,2.245,3.055,2.271 c-1.119,0.877-2.529,1.4-4.061,1.4c-0.264,0-0.524-0.015-0.78-0.046c1.447,0.928,3.166,1.469,5.013,1.469 c6.015,0,9.304-4.983,9.304-9.304c0-0.142-0.003-0.283-0.009-0.423C14.976,4.29,15.531,3.714,15.969,3.058z"/>
+                </svg>
+              </span>
+
+              <span class="username">GenkiSugimoto</span>
+            </a>
+          </li>
+          
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-3">
+        <p class="text">I post anything related to programming contests I attended and problems I solved. Currently I like TopCoder, AOJ (Aizu Online Judge), and AtCoder.
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+    <script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+  </body>
+
+</html>

@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>How to Get PUSH Notification from GitHub</title>
+  <meta name="description" content="If you use GitHub for your job or for your hobby, it’s likely that sometimes you have to wait other people to review your code or comment on issues. One day,...">
+
+  <link rel="stylesheet" href="/blog/css/main.css">
+  <link rel="canonical" href="http://genkisugimoto.com/blog/how-to-get-push-notification-from-github/">
+  <link rel="alternate" type="application/rss+xml" title="Sharpening the Saw until it Vanishes" href="http://genkisugimoto.com/blog/feed.xml" />
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/blog/">Sharpening the Saw until it Vanishes</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+        
+          
+        
+          
+          <a class="page-link" href="/blog/about/index.html">About</a>
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">How to Get PUSH Notification from GitHub</h1>
+    <p class="post-meta">Apr 20, 2014</p>
+  </header>
+
+  <article class="post-content">
+    <p>If you use GitHub for your job or for your hobby, it’s likely that sometimes you have to wait other people to review your code or comment on issues. One day, I realized myself visiting GitHub every so often so that I can notice reviews as soon as possible. I knew this is really bad for my productivity because it meant I was using my brain resources just waiting for other people.</p>
+
+<p>So, I have set up a system which sends push notifications when I get comments on GitHub. This system is to my previous GitHub checking habit what <a href="http://en.wikipedia.org/wiki/Interrupt" onclick="javascript:_gaq.push(['_trackEvent','outbound-article','http://en.wikipedia.org']);">Interrupt</a> is to <a href="http://en.wikipedia.org/wiki/Polling_(computer_science)" onclick="javascript:_gaq.push(['_trackEvent','outbound-article','http://en.wikipedia.org']);">Polling</a> in computer science – huge improvement in terms of using CPU (my brain) efficiently. I will share this system for you.</p>
+
+<p>This post assumes following situations:</p>
+
+<ul class="org-ul">
+  <li>
+    You have a Gmail account
+  </li>
+  <li>
+    You are not getting push notifications for emails (if you are, I must tell you that those are &#8220;<a href="http://lifehacker.com/5895617/you-should-forget-about-push-notifications-for-your-email" onclick="javascript:_gaq.push(['_trackEvent','outbound-article','http://lifehacker.com']);">killing your focus and destroying your ability to work to your capacity</a>&#8220;)
+  </li>
+  <li>
+    You know what IFTTT is (if not, I highly recommend you to <a href="http://www.quickanddirtytips.com/tech/web/what-is-ifttt-and-how-can-it-improve-your-digital-life" onclick="javascript:_gaq.push(['_trackEvent','outbound-article','http://www.quickanddirtytips.com']);">learn what it is and how it can improve your digital life</a>)
+  </li>
+</ul>
+
+<div id="outline-container-sec-1" class="outline-2">
+  <h2 id="sec-1">
+    GitHub&#8217;s Notification
+  </h2>
+
+  <div class="outline-text-2" id="text-1">
+    <p>
+      You might be thinking, &#8220;don&#8217;t you know GitHub already provides notification service?&#8221; I know it, but the problem is that it only provides email notification. To be precise, my habit was to check Gmail every so often so that I can notice GitHub notification, which was killing my productivity. Email is not the way to get important notifications because other non-important emails might catch your eye and distract you.
+    </p>
+
+    <p>
+      So, the goal of the system is to somehow turn GitHub&#8217;s email notification into push notification.
+    </p>
+  </div>
+</div>
+
+<div id="outline-container-sec-2" class="outline-2">
+  <h2 id="sec-2">
+    IFTTT
+  </h2>
+
+  <div class="outline-text-2" id="text-2">
+    <p>
+      This is where IFTTT comes in. Let&#8217;s create a new recipe which will be triggered by emails from GitHub and send you push notifications. The recipe I created is <a href="https://ifttt.com/myrecipes/personal/9646882" onclick="javascript:_gaq.push(['_trackEvent','outbound-article','http://ifttt.com']);">here</a> and you can see it as an example (or just use it directly).
+    </p>
+  </div>
+
+  <div id="outline-container-sec-2-1" class="outline-3">
+    <h3 id="sec-2-1">
+      This: Email with Label
+    </h3>
+
+    <div class="outline-text-3" id="text-2-1">
+      <p>
+        Choose Gmail as a trigger channel, and choose &#8220;New email labeled&#8221; as a trigger. Any label name would work, but make it clear like &#8220;github&#8221;. I will explain how to label emails later.
+      </p>
+    </div>
+  </div>
+
+  <div id="outline-container-sec-2-2" class="outline-3">
+    <h3 id="sec-2-2">
+      That: Notification
+    </h3>
+
+    <div class="outline-text-3" id="text-2-2">
+      <p>
+        Any notification service would work. My choice for now is <a href="https://www.pushbullet.com/" onclick="javascript:_gaq.push(['_trackEvent','outbound-article','http://www.pushbullet.com']);">Pushbullet</a>. I am not a heavy user yet, but I like the simple interface and it is doing its job so far on my Firefox and iPod touch. After you choose your notification service, create push content using Gmail&#8217;s ingredients like &#8220;Subject&#8221; and &#8220;BodyPlain&#8221;.
+      </p>
+    </div>
+  </div>
+</div>
+
+<div id="outline-container-sec-3" class="outline-2">
+  <h2 id="sec-3">
+    Label Emails from GitHub
+  </h2>
+
+  <div class="outline-text-2" id="text-3">
+    <p>
+      Now you should be able to get notification whenever an email is labeled &#8220;github&#8221;. So, the last step is to label GitHub notification emails.
+    </p>
+  </div>
+
+  <div id="outline-container-sec-3-1" class="outline-3">
+    <h3 id="sec-3-1">
+      Change GitHub&#8217;s Notification Address
+    </h3>
+
+    <div class="outline-text-3" id="text-3-1">
+      <p>
+        Gmail offers a pretty awesome trick that you can <a href="http://gmailblog.blogspot.jp/2008/03/2-hidden-ways-to-get-more-from-your.html" onclick="javascript:_gaq.push(['_trackEvent','outbound-article','http://gmailblog.blogspot.jp']);">append &#8220;+&#8221; and any text after your email address&#8217; local part</a>. If your address is &#8220;mail@gmail.com&#8221;, you can use addresses like &#8220;mail+friends@gmail.com&#8221; or &#8220;mail+family@gmail.com&#8221;, and as you guessed, &#8220;mail+github@gmail.com&#8221; too. So, let&#8217;s make GitHub send notifications to your &#8220;mail+github@gmail.com&#8221; address.
+      </p>
+
+      <ol class="org-ol">
+        <li>
+          Add another email address (&#8220;mail+github@gmail.com&#8221;): <a href="https://github.com/settings/emails" onclick="javascript:_gaq.push(['_trackEvent','outbound-article','http://github.com']);">https://github.com/settings/emails</a>
+        </li>
+        <li>
+          Choose that as the notification email address: <a href="https://github.com/settings/notifications" onclick="javascript:_gaq.push(['_trackEvent','outbound-article','http://github.com']);">https://github.com/settings/notifications</a>
+        </li>
+      </ol>
+    </div>
+  </div>
+
+  <div id="outline-container-sec-3-2" class="outline-3">
+    <h3 id="sec-3-2">
+      Create a Filter
+    </h3>
+
+    <div class="outline-text-3" id="text-3-2">
+      <p>
+        Now, let&#8217;s assign the &#8220;github&#8221; label to all emails sent to &#8220;mail+github@gmail.com&#8221; address.
+      </p>
+
+      <ol class="org-ol">
+        <li>
+          Visit <a href="https://mail.google.com/mail/u/0/#settings/filters" onclick="javascript:_gaq.push(['_trackEvent','outbound-article','http://mail.google.com']);">https://mail.google.com/mail/u/0/#settings/filters</a>
+        </li>
+        <li>
+          Click &#8220;Create a new filter&#8221;
+        </li>
+        <li>
+          Input &#8220;mail+github@gmail.com&#8221; to &#8220;To&#8221; field
+        </li>
+        <li>
+          Click &#8220;Create filter with this search&#8221;
+        </li>
+        <li>
+          In &#8220;Apply the label&#8221; section, choose &#8220;github&#8221; (you can create new label here. Be sure to choose the same name you used in your IFTTT recipe)
+        </li>
+        <li>
+          Click &#8220;Create filter&#8221;
+        </li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<div id="outline-container-sec-4" class="outline-2">
+  <h2 id="sec-4">
+    All Set
+  </h2>
+
+  <div class="outline-text-2" id="text-4">
+    <p>
+      OK, you are all set and now you can forget about waiting for code reviews or comments and do other productive things until push notifications come. But before that, I recommend you to test your system by sending an email to &#8220;mail+github@gmail.com&#8221; yourself. The mail should be labeled as &#8220;github&#8221; and push notification should be sent to you. (In my case, it took 2 to 3 minutes to get a push after sending an email myself, so don&#8217;t worry if your push does not come instantly.)
+    </p>
+  </div>
+</div>
+
+<div id="outline-container-sec-5" class="outline-2">
+  <h2 id="sec-5">
+    What&#8217;s Next?
+  </h2>
+
+  <div class="outline-text-2" id="text-5">
+    <p>
+      This technique can be applied to any situations. For example, you can get notifications for emails from your family by having them send emails to &#8220;mail+family@gmail.com&#8221; rather than &#8220;mail@gmail.com&#8221; (don&#8217;t forget to create another IFTTT recipe and another Gmail filter). Push notification can help you free up your brain resources like this, or hurt your productivity by distracting you all the time. So, push wisely.
+    </p>
+  </div>
+</div>
+
+  </article>
+
+  
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES * * */
+        var disqus_shortname = 'genkisblog';
+        
+        var disqus_identifier = '2624944856';
+        
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+  
+
+  <!-- Go to www.addthis.com/dashboard to customize your tools -->
+  <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-552274544aaae8ac" async="async"></script>
+
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Sharpening the Saw until it Vanishes</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col  footer-col-1">
+        <ul class="contact-list">
+          <li>Sharpening the Saw until it Vanishes</li>
+          <li><a href="mailto:cfhoyuk.reccos.nelg@gmail.com">cfhoyuk.reccos.nelg@gmail.com</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-2">
+        <ul class="social-media-list">
+          
+          <li>
+            <a href="https://github.com/Genki-S">
+              <span class="icon  icon--github">
+                <svg viewBox="0 0 16 16">
+                  <path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                </svg>
+              </span>
+
+              <span class="username">Genki-S</span>
+            </a>
+          </li>
+          
+
+          
+          <li>
+            <a href="https://twitter.com/GenkiSugimoto">
+              <span class="icon  icon--twitter">
+                <svg viewBox="0 0 16 16">
+                  <path fill="#828282" d="M15.969,3.058c-0.586,0.26-1.217,0.436-1.878,0.515c0.675-0.405,1.194-1.045,1.438-1.809
+                  c-0.632,0.375-1.332,0.647-2.076,0.793c-0.596-0.636-1.446-1.033-2.387-1.033c-1.806,0-3.27,1.464-3.27,3.27 c0,0.256,0.029,0.506,0.085,0.745C5.163,5.404,2.753,4.102,1.14,2.124C0.859,2.607,0.698,3.168,0.698,3.767 c0,1.134,0.577,2.135,1.455,2.722C1.616,6.472,1.112,6.325,0.671,6.08c0,0.014,0,0.027,0,0.041c0,1.584,1.127,2.906,2.623,3.206 C3.02,9.402,2.731,9.442,2.433,9.442c-0.211,0-0.416-0.021-0.615-0.059c0.416,1.299,1.624,2.245,3.055,2.271 c-1.119,0.877-2.529,1.4-4.061,1.4c-0.264,0-0.524-0.015-0.78-0.046c1.447,0.928,3.166,1.469,5.013,1.469 c6.015,0,9.304-4.983,9.304-9.304c0-0.142-0.003-0.283-0.009-0.423C14.976,4.29,15.531,3.714,15.969,3.058z"/>
+                </svg>
+              </span>
+
+              <span class="username">GenkiSugimoto</span>
+            </a>
+          </li>
+          
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-3">
+        <p class="text">tips for better life, especially in tech
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/gist-embed/2.1/gist-embed.min.js"></script>
+
+  </body>
+
+</html>

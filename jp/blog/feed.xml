@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>あいむふぁいん</title>
+    <description>A blog of Genki Sugimoto. Write what I like, when I like.
+</description>
+    <link>http://genkisugimoto.com/jp/blog/</link>
+    <atom:link href="http://genkisugimoto.com/jp/blog/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Sun, 13 Sep 2015 11:55:45 +0900</pubDate>
+    <lastBuildDate>Sun, 13 Sep 2015 11:55:45 +0900</lastBuildDate>
+    <generator>Jekyll v2.5.3</generator>
+    
+      <item>
+        <title>競技プログラミングで使えるC++プリントデバッグテクニック ~ Operator Overloading 編 ~</title>
+        <description>&lt;p&gt;C++の “Operator Overloading” という仕組みを使うことで、&lt;code&gt;std::pair&lt;/code&gt;や&lt;code&gt;std::vector&lt;/code&gt;などの複雑な型を簡単に出力できるようにします。この仕組みを使えば、どんな複雑な型でも&lt;code&gt;cout &amp;lt;&amp;lt; N&lt;/code&gt;のように気軽に出力できるようになり便利です。&lt;/p&gt;
+
+&lt;p&gt;Operator Overloadingについて正しく理解していないのですが、動作のイメージとしては&lt;code&gt;std::ostream&lt;/code&gt;クラスに対して&lt;code&gt;operator&amp;lt;&amp;lt;(任意の型)&lt;/code&gt;というメソッドを後から定義している、と考えていいのではないかと思っています。&lt;code&gt;std::ostream&lt;/code&gt;というのは&lt;code&gt;std::cout&lt;/code&gt;オブジェクトや&lt;code&gt;std::cerr&lt;/code&gt;オブジェクトのクラスで、&lt;code&gt;std::cout &amp;lt;&amp;lt; 42;&lt;/code&gt;という式は&lt;code&gt;std::cout.operator&amp;lt;&amp;lt;(42);&lt;/code&gt;(&lt;code&gt;std::cout&lt;/code&gt;オブジェクトに対する&lt;code&gt;operator&amp;lt;&amp;lt;&lt;/code&gt;というメソッドの呼び出し)という式と等価らしいです。&lt;/p&gt;
+
+&lt;h2 id=&quot;stdpair&quot;&gt;std::pair&lt;/h2&gt;
+
+&lt;p&gt;まずは&lt;code&gt;std::pair&lt;/code&gt;に対する&lt;code&gt;operator&amp;lt;&amp;lt;&lt;/code&gt;を拡張してみます。(ちなみに&lt;code&gt;&amp;lt;&amp;lt;&lt;/code&gt;は”insertion operator”というらしい)&lt;/p&gt;
+
+&lt;p&gt;&lt;code data-gist-id=&quot;0c96c31a214c61d02816&quot; data-gist-file=&quot;pair.cpp&quot;&gt;&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;これの出力は以下のようになります。&lt;/p&gt;
+
+&lt;p&gt;&lt;code data-gist-id=&quot;0c96c31a214c61d02816&quot; data-gist-file=&quot;pair.cpp.out&quot;&gt;&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;4行目が&lt;code&gt;operator&amp;lt;&amp;lt;&lt;/code&gt;をoverloadingしている部分です。8行目の&lt;code&gt;cout &amp;lt;&amp;lt; p &amp;lt;&amp;lt; endl;&lt;/code&gt;という式で&lt;code&gt;std::pair&lt;/code&gt;を簡単に出力できて便利ですね！&lt;/p&gt;
+
+&lt;h2 id=&quot;stdvector&quot;&gt;std::vector&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;std::vector&lt;/code&gt;も、&lt;code&gt;operator&amp;lt;&amp;lt;&lt;/code&gt;を拡張しておけば出力するたびに毎回ループを書かなくてすみます。2次元&lt;code&gt;vector&lt;/code&gt;にも応用可能です！&lt;/p&gt;
+
+&lt;p&gt;&lt;code data-gist-id=&quot;0c96c31a214c61d02816&quot; data-gist-file=&quot;vector.cpp&quot;&gt;&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;これの出力は以下のようになります。&lt;/p&gt;
+
+&lt;p&gt;&lt;code data-gist-id=&quot;0c96c31a214c61d02816&quot; data-gist-file=&quot;vector.cpp.out&quot;&gt;&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;9行目で&lt;code&gt;vector&lt;/code&gt;の区切り文字にタブ文字を使用しているので見やすいです。こんな感じで出力を好きなように加工できるのも便利です。&lt;/p&gt;
+
+&lt;h2 id=&quot;stdmap&quot;&gt;std::map&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;std::map&lt;/code&gt;はあまり出力する機会がない気がしますが、operator overloadingで出力を工夫すると綺麗に出力できます。&lt;/p&gt;
+
+&lt;p&gt;&lt;code data-gist-id=&quot;0c96c31a214c61d02816&quot; data-gist-file=&quot;map.cpp&quot;&gt;&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;これの出力は以下のようになります。&lt;/p&gt;
+
+&lt;p&gt;&lt;code data-gist-id=&quot;0c96c31a214c61d02816&quot; data-gist-file=&quot;map.cpp.out&quot;&gt;&lt;/code&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;section&quot;&gt;まとめ&lt;/h2&gt;
+
+&lt;p&gt;Operator Overloading使ってデバッグを楽にしよう！という記事でした。オレオレマクロとかオレオレ拡張がし放題なのも競技プログラミングの楽しさの1つですね(こっちの方が楽しくなりすぎて練習が捗らないこともしょっちゅうです…)。僕の競プロ用C++テンプレートは &lt;a href=&quot;https://github.com/Genki-S/dotfiles/blob/master/clicoder.d/template.cpp&quot;&gt;ここ&lt;/a&gt; にあるのでよかったらみてみてください。何かアドバイスとかあれば是非コメントください！(競プロ勢のテンプレートまとめみたいなの欲しいなぁ)&lt;/p&gt;
+
+&lt;p&gt;実行したやつ: &lt;a href=&quot;http://ideone.com/68ibRf&quot;&gt;Ideone.com - 68ibRf&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;section-1&quot;&gt;参考&lt;/h2&gt;
+
+&lt;p&gt;この辺しっかり読めばOperator Overloadingマスターになれるかも&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;http://en.cppreference.com/w/cpp/language/operators&quot;&gt;operator overloading - cppreference.com&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://www.cplusplus.com/reference/ostream/ostream/&quot;&gt;ostream - C++ Reference&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://www.cplusplus.com/reference/ostream/ostream/operator%3C%3C/&quot;&gt;ostream::operator« - C++ Reference&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Wed, 15 Apr 2015 00:00:00 +0900</pubDate>
+        <link>http://genkisugimoto.com/jp/blog/procon/2015/04/15/print-debug-technique-in-cpp.html</link>
+        <guid isPermaLink="true">http://genkisugimoto.com/jp/blog/procon/2015/04/15/print-debug-technique-in-cpp.html</guid>
+        
+        
+        <category>procon</category>
+        
+      </item>
+    
+      <item>
+        <title>リクルートインターンシップで負けて、猛省しております</title>
+        <description>&lt;p&gt;参加者がみんな参加記を書く中、僕は割と書く気がなかったのですが(文章書くの苦手)、&lt;a href=&quot;http://profile.hatena.ne.jp/yanoshi/&quot;&gt;id:yanoshi&lt;/a&gt;の記事を見てすごくすっきりしたのでその辺を書き留めておこうと思います。&lt;/p&gt;
+
+&lt;p&gt;記事はこちら: &lt;a href=&quot;http://yanoshi.hatenablog.jp/entry/2015/03/02/131319&quot;&gt;実録、コミュ障非リアでもリクルート社インターンシップで優勝できる。 - さわっても熱くない花火&lt;/a&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;section&quot;&gt;ふわっとした感想&lt;/h1&gt;
+
+&lt;p&gt;みんな書いているのでこの辺は簡単に書きます。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;参加者のレベルがマジで半端無く高かった&lt;/li&gt;
+  &lt;li&gt;コード書くための環境を本当に気を遣って用意して頂いた&lt;/li&gt;
+  &lt;li&gt;お金持ってた&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;section-1&quot;&gt;で、本題&lt;/h1&gt;
+
+&lt;p&gt;僕はこのインターンシップで勝つ気マンマンでしたし、勝つつもりしかありませんでした。しかし結果として優勝できず、とても悔しい思いをしました。負けた理由もわからず今まで(たぶん)どこか引っかかったままでいたのですが、上述の記事を読むことで負けた理由がはっきりわかってすっきりしたのです。&lt;/p&gt;
+
+&lt;p&gt;僕が負けた理由は、「プレゼンでゴリ押せば勝てる」という舐めた姿勢に依るものでした。今まで参加してきたインターンシップでは正直プレゼンでゴリ押せば勝てるものが多かったので、そうタカをくくっていたのでしょう。謙遜にドロップキックした上で言わせてもらうと、僕はエンジニアの中では割とプレゼンが上手い方だと思ってます。なので今回のインターンシップもプレゼンには割と力を入れたし、悪くないプレゼンができたのではないかと思ってます(本音を言うと準備不足あるあるでスライド振り返りまくってアイコンタクト全然とってないクソプレゼンだったけど、それは別の話)。&lt;/p&gt;
+
+&lt;p&gt;僕達が作ったアプリにはまだ完成していない部分もあり、他の参加者の中にも「あいつ ワシより強くねー？」って思う人が結構いましたが、それでも最後の最後まで勝つ気マンマンでいられたのは「プレゼンでゴリ押せば勝てる」という思いがあったからです。&lt;/p&gt;
+
+&lt;p&gt;しかし、優勝したのは”あいしす！”というチームでした。「負けるならこのチームかなー」って思っていたチームはいくつかあるのですが、正直”あいしす！”はその中になく(ごめん)、非常に驚きました(一応弁明しておくと、あいしす！はあまり表に出てきていなかったので何やってるかよくわからなかった)。今の今まで何でこの結果になったのかきちんと理解してなかったのですが、以下の文章を読んでやっと理解出来ました。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;大変失礼な話なのだが、私の中でのリクルートのインターンシップのイメージは、「いかにもコミュ力が高く、プレゼン力が高い人間が、ドヤ顔でプロダクトをプレゼンして優勝していく」という物だった。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;(略)
+しかし、うちのチームは違った。
+CIは導入していなかった。TDDもしていない。
+しかし、商用プロダクトもやってないような変態的な技術的こだわりが何箇所かあった。
+わざわざシンガポールリージョンに置いたDBのレプリケーションを行っていた。
+フロントはSingle Page Applicationとして構成されていて、メモリーダンプを利用して解析し、極限までメモリーリークが排除された素晴らしい設計となっていた。
+写真データやAPIのレスポンスデータも適宜、LocalStorageに保存されていたし、キャッシングは何重にも行われていた。
+io.js+CoffeeScriptでコメントが不要なレベルのかなりスマートに書かれたコードも魅力的だったように思う。
+上げていけばキリがないのだが、尖った存在だったのではないだろうか。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://yanoshi.hatenablog.jp/entry/2015/03/02/131319#fn-9d72b6fd&quot;&gt;実録、コミュ障非リアでもリクルート社インターンシップで優勝できる。 - さわっても熱くない花火&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;僕達のチームはCIを導入していました。僕はTDDをして、カバレッジが97%だったりCode ClimateのGPAが4.0だったりしました。他にも Capistrano, Docker, CoreOS, Fleet, New Relic, mackerel といった”イケてる”サービスを導入したりしていました。しかしこれらも今振り返ってみると、「スライドにロゴを入れたかった」だけな気がしています。スケールできない構成にしてるからそもそもFleetとか使う意味ないし、New Relic, mackerel はチューニングする余裕なんかないことを承知の上で導入していました。つまり、まとめると、&lt;strong&gt;技術に対するこだわりがなかった&lt;/strong&gt;。&lt;/p&gt;
+
+&lt;p&gt;開発の完成度を評価すると最初に明言していたインターンシップで、”あいしす！”のように技術にこだわったチームが評価されたのは妥当だと思うし、同時にこんなにちゃんと評価してくれるインターンシップがあることが嬉しくもあります(負けたのは悔しいけどね！！！！！！！！！！)。自分にとっても、技術に対する姿勢を問いなおす良い機会になったので最高です。学びが多かった。&lt;/p&gt;
+
+&lt;p&gt;あとは、バックエンドとiOS側の分業意識が強すぎて、あまりiOS側に関与できなかったのも個人的にすごく反省してます(iOSに対する苦手意識もあり…)。チームメイトには非常に申し訳ない。もっと上手くやれたと思えることは沢山ありますね…。でもモチベ高いメンツで開発できたの超楽しかったし、ネタも豊富で良いチームだった！！！w&lt;/p&gt;
+
+&lt;h1 id=&quot;section-2&quot;&gt;まとめ&lt;/h1&gt;
+
+&lt;p&gt;まとめると、僕が負けた理由は:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;プレゼンでゴリ押せば勝てると思っていた&lt;/li&gt;
+  &lt;li&gt;技術に対して真摯ではなかった&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;となります。超良い気付きだ。&lt;a href=&quot;http://profile.hatena.ne.jp/yanoshi/&quot;&gt;id:yanoshi&lt;/a&gt;に圧倒的感謝。&lt;/p&gt;
+
+&lt;h1 id=&quot;one-more-thing&quot;&gt;One more thing&lt;/h1&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;3人で家を作るとして、一人がのこぎりの使い手、一人が釘打ちの天才だったとしよう。その場合もう一人の存在であるあなたは、彼らの仕事を押しのけて木を切ったり、釘を打ったりするだろうか？
+私は二人が心地よく仕事が出来るように、設計等を伝えたり、家の土台作りや壁塗りを率先してやろうと思うし、これが最適解だと信じている。
+要はそういうことだ。&lt;/p&gt;
+
+  &lt;p&gt;チームメンバーの思考を読み、常に先の一手を打つように心がけていたように思う。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;完敗である。&lt;/p&gt;
+
+&lt;h1 id=&quot;section-3&quot;&gt;謝辞&lt;/h1&gt;
+
+&lt;p&gt;学びの多いインターンシップを創ってくださった皆さん、本当にありがとうございました。最高の経験でした。&lt;/p&gt;
+
+&lt;p&gt;一緒に戦った参加者の皆さん、超良い刺激をありがとうございました。あんま話してない人もいるけどみんな面白そうなので是非話したい。今後共よろしくお願いします。&lt;/p&gt;
+
+&lt;h1 id=&quot;ps&quot;&gt;P.S.&lt;/h1&gt;
+
+&lt;p&gt;超真面目な記事で申し訳ない… 就活初めてからマジレスマシーンと化しています。&lt;/p&gt;
+</description>
+        <pubDate>Mon, 02 Mar 2015 00:00:00 +0900</pubDate>
+        <link>http://genkisugimoto.com/jp/blog/jobhunting/2015/03/02/recruit-winter-internship.html</link>
+        <guid isPermaLink="true">http://genkisugimoto.com/jp/blog/jobhunting/2015/03/02/recruit-winter-internship.html</guid>
+        
+        
+        <category>jobhunting</category>
+        
+      </item>
+    
+      <item>
+        <title>トビタテ！留学JAPAN 日本代表プログラム 壮行会</title>
+        <description>&lt;p&gt;トビタテ！留学JAPANという留学プログラムに参加させて頂けることになり、今日はその壮行会に行ってきました。これから色々とアウトプットすることで学びを蓄積/共有したいので、早速今日のことについて書いてみようと思います。&lt;/p&gt;
+
+&lt;p&gt;トビタテについて詳細はこちら: &lt;a href=&quot;https://tobitate.jasso.go.jp/&quot;&gt;トビタテ！官民協働留学支援制度～トビタテ！留学JAPAN　日本代表プログラム～&lt;/a&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;section&quot;&gt;午前: 各種式典&lt;/h1&gt;
+
+&lt;p&gt;まずは下村博文文部科学大臣からのお言葉がありました。グローバル人財には、(1)課題を主体的に解決する能力、(2)クリエイティブな能力/起業家精神、そして(3)コンピュータが到達できない人間的能力(おもいやりなど)が大切であるというお言葉を頂きました。スピーチがとても上手く、トビタテの狙いや我々にかけられた期待などがすっと入ってきて、留学モチベがすごく上がりました。&lt;/p&gt;
+
+&lt;p&gt;次に、三菱商事の小島様よりお話を頂きました。ユーモアがありとても楽しく拝聴できました。今の世界は “VUCA” (Volatile, Uncertainty, Complexity, Ambiguity) と言われるように非常に不安定で、今までの延長線上で発想していてはいけないということを仰っていました。また、我々に期待する5つのC、curiousity, challenge, communication, courtecy, characteristic についてもお話を頂きました。どれも自分には割と欠けている、というか満足できるレベルにないものなので、留学を通じて鍛えたいと思います。&lt;/p&gt;
+
+&lt;p&gt;その後は1期生代表からの激励、2期生代表の決意表明と続き、みんなの志の高さに感動してました。特に、たしか最初に流れてたムービーの中だったと思うけど、「感染症に苦しむ子どもたちを救いたい」と言っていた人には感動しました。そういうの好きです。&lt;/p&gt;
+
+&lt;p&gt;2期生でめっちゃスピーチうまい人がいて(芸人ばり)面白かったです。「外国という言葉はあるけど外県という言葉はない。これは国境を挟むことで当事者意識がなくなってしまうからだ」というスピーチの内容にも感心しました。確かにそうですよね、なんとなく外国って言ってるけど、それは壁を感じている証拠ですね。島国っていうのも関係してるかもしれない。これをどのように変えてくれるのか楽しみです。&lt;/p&gt;
+
+&lt;h1 id=&quot;section-1&quot;&gt;ランチ&lt;/h1&gt;
+
+&lt;p&gt;コミュニケーション能力を問われる場だった。頑張りましたが僕には少しつらかったです。お話するのは楽しいからいいんだけど、約300〜400人が一斉にお喋りしてる中でやるのはキツイ。デシベルを測りたくなりました。でも話せた人はこれまた良いことしてる人でとても良かった。レコメンドアルゴリズムを使って介護のマッチングをしてるとか言ってたかな。もっと詳細聞きたかった。&lt;/p&gt;
+
+&lt;p&gt;締めの挨拶ではユーモアたっぷりのスピーチで企業から寄付を募るために文科省の方が尽力してくださっていることを知ることができ、面白いながらも良い意味でのプレッシャーがかかりました。気合入る！&lt;/p&gt;
+
+&lt;h1 id=&quot;section-2&quot;&gt;研修&lt;/h1&gt;
+
+&lt;p&gt;最後にさらっと事前研修というものを行いました。同じ早稲田からの人と知りあえて良かった。てか早稲田から来てる人わりといてビックリ。&lt;/p&gt;
+
+&lt;p&gt;時間がなかったのであまり内容は濃くなかったけど、トビタテのコミュニティの貴重さを実感できたのは良かった。面白い人いっぱいいそうだから色んな友達できるといいな。&lt;/p&gt;
+
+&lt;h1 id=&quot;section-3&quot;&gt;所感&lt;/h1&gt;
+
+&lt;p&gt;正直今まであまり留学に行くという実感が持ててなかったけど、今日で少し実感が出てきた。次は3月7日と8日に事前研修があるけど、その前に自分の留学目的とかまとめて明文化しておきたいな。&lt;/p&gt;
+</description>
+        <pubDate>Sun, 01 Mar 2015 00:00:00 +0900</pubDate>
+        <link>http://genkisugimoto.com/jp/blog/tobitate/2015/03/01/tobitate-send-off-party.html</link>
+        <guid isPermaLink="true">http://genkisugimoto.com/jp/blog/tobitate/2015/03/01/tobitate-send-off-party.html</guid>
+        
+        
+        <category>tobitate</category>
+        
+      </item>
+    
+      <item>
+        <title>ブログ始めます</title>
+        <description>&lt;h1 id=&quot;section&quot;&gt;なぜ？&lt;/h1&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;インターンシップとかのイベントの参加記とか書くと後で見返せていいなと思った&lt;/li&gt;
+  &lt;li&gt;読書記とかも、アウトプットすることで自分の理解がより深くなるので良さそう&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;section-1&quot;&gt;どのように？&lt;/h1&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;イベントに参加したら参加記を書く
+    &lt;ul&gt;
+      &lt;li&gt;以前参加したものの振り返りもいいかも&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;本を一冊読んだら読書記を書く
+    &lt;ul&gt;
+      &lt;li&gt;以前読んだものも書いてくと良さそう&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;とりあえず、書きたいときに書きたいことを書くことにする。&lt;/p&gt;
+
+&lt;h1 id=&quot;section-2&quot;&gt;雑記&lt;/h1&gt;
+
+&lt;p&gt;年末くらいからブログ開設しようと思ってたんだけど、せっかくだから最高のインフラに
+しようとしてたら全然開設できなかった。このまま続けてもしばらくできなそうだから、
+最小限の構成で開設することにする。GitHubで管理して、werckerでビルド&amp;amp;デプロイでき
+るようにしたいな。書いてpushすれば勝手にデプロイみたいな。スペルチェックみたいな
+テスト走らせるのも面白そう。&lt;/p&gt;
+
+&lt;p&gt;次は、”モダンなブログ執筆環境”みたいな記事を書きたい。&lt;/p&gt;
+</description>
+        <pubDate>Fri, 30 Jan 2015 00:00:00 +0900</pubDate>
+        <link>http://genkisugimoto.com/jp/blog/2015/01/30/starting-a-blog.html</link>
+        <guid isPermaLink="true">http://genkisugimoto.com/jp/blog/2015/01/30/starting-a-blog.html</guid>
+        
+        
+      </item>
+    
+  </channel>
+</rss>

@@ -1,8 +1,0 @@
-#!/bin/bash
-
-set -x
-
-root="$(dirname $(readlink -f $0))/.."
-
-cd $root
-git submodule foreach "git reset --hard HEAD && git pull"
